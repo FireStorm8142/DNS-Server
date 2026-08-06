@@ -17,20 +17,23 @@ func main() {
 		panic(err)
 	}
 	defer conn.Close()
-
 	fmt.Println("DNS Server listening on port 53")
 
 	buffer := make([]byte, 512)
-
 	for {
 		n, clientAddr, err := conn.ReadFromUDP(buffer)
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
-
 		fmt.Println("Received packet from:", clientAddr)
 		fmt.Println("Packet length:", n)
-		fmt.Println(buffer[:n])
+
+		header, err := parseHeader(buffer[:n])
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		fmt.Printf("%+v\n", header)
 	}
 }
