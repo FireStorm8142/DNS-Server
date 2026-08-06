@@ -8,3 +8,9 @@ type DNSHeader struct {
 	NSCount uint16
 	ARCount uint16
 }
+
+type DNSQuestion struct {
+	QName  string
+	QType  uint16
+	QClass uint16
+}

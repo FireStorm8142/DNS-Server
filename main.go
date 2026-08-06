@@ -35,5 +35,16 @@ func main() {
 			continue
 		}
 		fmt.Printf("%+v\n", header)
+
+		index := 12
+		questions := make([]DNSQuestion, int(header.QDCount))
+		for i := 0; i < int(header.QDCount); i++ {
+			question, index, err := parseQuestion(buffer[:n], index)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+			questions[i] = question
+		}
 	}
 }

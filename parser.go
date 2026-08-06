@@ -17,3 +17,29 @@ func parseHeader(packet []byte) (DNSHeader, error) {
 	arcount := binary.BigEndian.Uint16(packet[10:12])
 	return DNSHeader{id, flags, qdcount, ancount, nscount, arcount}, nil
 }
+
+func parseQuestion(packet []byte, offset int) (DNSQuestion, index, error) {
+
+	//Read QNames
+	Qname := ""
+	for {
+		length = int(packet[offset])
+		offset++
+		if length == 0 {
+			break
+		}
+		Qname += string(packet[offset : offset+length])
+		Qname += "."
+		offset += length
+	}
+
+	//Read QType
+	Qtype := binary.BigEndian.Uint16(packet[offset : offset+2])
+	offset += 2
+
+	//Read QClass
+	Qclass := binary.BigEndian.Uint16(packet[offset : offset+2])
+	offset += 2
+
+	return DNSQuestion{Qname, Qtype, Qclass}, offset, nil
+}
