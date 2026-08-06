@@ -33,6 +33,7 @@ func parseQuestion(packet []byte, offset int) (DNSQuestion, int, error) {
 		Qname += "."
 		offset += length
 	}
+	Qname = Qname[0 : len(Qname)-1]
 
 	//Read QType
 	Qtype := binary.BigEndian.Uint16(packet[offset : offset+2])

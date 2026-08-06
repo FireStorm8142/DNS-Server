@@ -1,6 +1,9 @@
 package main
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+	"strings"
+)
 
 func buildHeader(header DNSHeader) []byte {
 	response := make([]byte, 12)
@@ -18,7 +21,20 @@ func buildHeader(header DNSHeader) []byte {
 }
 
 func buildQuestionSection(question DNSQuestion) []byte {
-	
+	var response []byte
+	labels := strings.Split(question.QName, ".")
+	for _, label := range labels {
+		response = append(response, byte(len(label)))
+		response = append(response, []byte(label)...)
+	}
+	response = append(response, byte(0))
+
+	temp := make([]byte, 2)
+	binary.BigEndian.PutUint16(temp, question.QType)
+	response = append(response, temp...)
+	binary.BigEndian.PutUint16(temp, question.QClass)
+	response = append(response, temp...)
+	return response
 }
 
 func buildAnswer() []byte {
