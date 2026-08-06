@@ -26,6 +26,7 @@ func main() {
 			fmt.Println(err)
 			continue
 		}
+		fmt.Println()
 		fmt.Println("Received packet from:", clientAddr)
 		fmt.Println("Packet length:", n)
 
@@ -39,12 +40,16 @@ func main() {
 		index := 12
 		questions := make([]DNSQuestion, int(header.QDCount))
 		for i := 0; i < int(header.QDCount); i++ {
-			question, index, err := parseQuestion(buffer[:n], index)
+			question, offset, err := parseQuestion(buffer[:n], index)
 			if err != nil {
 				fmt.Println(err)
 				continue
 			}
+			fmt.Printf("%+v\n", question)
 			questions[i] = question
+			index = offset
 		}
 	}
+
+	response := buildResponse(header, question)
 }

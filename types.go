@@ -1,5 +1,13 @@
 package main
 
+type DNSPacket struct {
+	Header     DNSHeader
+	Questions  []DNSQuestion
+	Answers    []DNSResourceRecord
+	Authority  []DNSResourceRecord
+	Additional []DNSResourceRecord
+}
+
 type DNSHeader struct {
 	ID      uint16
 	Flags   uint16
@@ -13,4 +21,12 @@ type DNSQuestion struct {
 	QName  string
 	QType  uint16
 	QClass uint16
+}
+
+type DNSResourceRecord struct {
+	Name  string
+	Type  uint16
+	Class uint16
+	TTL   uint32
+	RData []byte
 }

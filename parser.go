@@ -15,15 +15,16 @@ func parseHeader(packet []byte) (DNSHeader, error) {
 	ancount := binary.BigEndian.Uint16(packet[6:8])
 	nscount := binary.BigEndian.Uint16(packet[8:10])
 	arcount := binary.BigEndian.Uint16(packet[10:12])
+
 	return DNSHeader{id, flags, qdcount, ancount, nscount, arcount}, nil
 }
 
-func parseQuestion(packet []byte, offset int) (DNSQuestion, index, error) {
+func parseQuestion(packet []byte, offset int) (DNSQuestion, int, error) {
 
 	//Read QNames
 	Qname := ""
 	for {
-		length = int(packet[offset])
+		length := int(packet[offset])
 		offset++
 		if length == 0 {
 			break
