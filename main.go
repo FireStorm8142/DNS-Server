@@ -52,9 +52,25 @@ func main() {
 			index = offset
 		}
 
-		//Build Packet
-		packet := DNSPacket{header, questions, nil, nil, nil}
+		//Build Answer
+		answers := make([]DNSResourceRecord, 0)
+		for _, question := range questions {
+			answer := DNSResourceRecord{question.QName, question.QType, question.QClass, 60, []byte{8, 8, 8, 8}}
+			answers = append(answers, answer)
+		}
 
+		//Build Packet
+		packet := DNSPacket{header, questions, answers, nil, nil}
+
+		//Build response byte[] to send to client
 		response := buildResponse(packet)
+		fmt.Println(len(response))
+		fmt.Printf("% X\n", response)
+
+		//Send response to client
+		_, err = conn.WriteToUDP(response, clientAddr)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
