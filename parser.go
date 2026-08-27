@@ -45,3 +45,15 @@ func parseQuestion(packet []byte, offset int) (DNSQuestion, int, error) {
 
 	return DNSQuestion{Qname, Qtype, Qclass}, offset, nil
 }
+
+func resolveQuestion(question DNSQuestion) []DNSResourceRecord {
+	answer := DNSResourceRecord{
+		Name:  question.QName,
+		Type:  question.QType,
+		Class: question.QClass,
+		TTL:   60,
+		RData: []byte{8, 8, 8, 8},
+	}
+
+	return []DNSResourceRecord{answer}
+}

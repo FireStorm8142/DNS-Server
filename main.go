@@ -55,8 +55,8 @@ func main() {
 		//Build Answer
 		answers := make([]DNSResourceRecord, 0)
 		for _, question := range questions {
-			answer := DNSResourceRecord{question.QName, question.QType, question.QClass, 60, []byte{8, 8, 8, 8}}
-			answers = append(answers, answer)
+			answer := resolveQuestion(question)
+			answers = append(answers, answer...)
 		}
 
 		//Build Packet
